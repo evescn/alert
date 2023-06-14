@@ -5,10 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import datetime
 
-
 # Create your views here.
-
-
 class Alert(APIView):
 
     def post(self, request):

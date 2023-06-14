@@ -19,6 +19,6 @@ from app import views
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('/api/alert', views.Alert, name='alert'),
-    path('/api/mail', views.Mail, name='mail'),
+    path('api/alert', views.Alert.as_view(), name='alert'),
+    path('api/mail', views.Mail.as_view(), name='mail'),
 ]
