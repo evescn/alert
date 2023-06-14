@@ -32,6 +32,7 @@ class Alert(APIView):
 
         try:
             # 提取数据
+            logger.info(request.data)
             title = request.data['title'][0]
             logger.info(title)
             content = request.data['content'][0]
