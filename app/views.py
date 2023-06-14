@@ -33,7 +33,9 @@ class Alert(APIView):
         try:
             # 提取数据
             title = request.data['title'][0]
+            logger.info(title)
             content = request.data['content'][0]
+            logger.info(content)
 
             # 抽离数据
             alert_type = title.split('[')[1].split(']')[0].strip()
