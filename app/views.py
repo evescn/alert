@@ -32,11 +32,10 @@ class Alert(APIView):
 
         try:
             # 提取数据
-            logger.info(request.data['title'])
-            title = request.data['title'][0]
+            title = request.data['title']
             logger.info(title)
-            
-            content = request.data['content'][0]
+
+            content = request.data['content']
             logger.info(content)
 
             # 抽离数据
