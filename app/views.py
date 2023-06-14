@@ -37,12 +37,18 @@ class Alert(APIView):
 
             # 抽离数据
             alert_type = title.split('[')[1].split(']')[0].strip()
+            logger.info(alert_type)
             alert_project = title.split('[')[2].split(']')[0].split(':')[1].strip()
+            logger.info(alert_project)
             monitor_item = title.split('[')[3].split(']')[0].split(':')[1].strip()
+            logger.info(monitor_item)
             alert_content = content.split('[')[3].split(']')[0].strip() + ', ' + \
                             (': '.join(content.split('[')[2].split(']')[0].split(':')[:])).strip()
+            logger.info(alert_content)
             alert_time = (':'.join(content.split('[')[4].split(']')[0].split(':')[1:])).strip()
+            logger.info(alert_time)
             alert_interval = content.split('[')[6].split(']')[1]
+            logger.info(alert_interval)
 
             # 组装数据
             msg = '''

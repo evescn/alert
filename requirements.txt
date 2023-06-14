@@ -1,3 +1,4 @@
-# pipreqs ./
+# pipreqs ./ --force
 Django==3.2.5
 djangorestframework==3.14.0
+Requests==2.31.0
