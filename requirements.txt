@@ -1,0 +1,3 @@
+# pipreqs ./
+Django==3.2.5
+djangorestframework==3.14.0
