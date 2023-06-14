@@ -14,3 +14,9 @@ class Alert(APIView):
     def post(self, request):
         print(request.data)
         return Response({'status': '200'})
+
+class Mail(APIView):
+
+    def post(self, request):
+        print(request.data)
+        return Response({'status': '200'})
