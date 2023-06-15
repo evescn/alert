@@ -79,7 +79,7 @@ class Alert(APIView):
                 alert_time,
                 alert_interval
             )
-            logger.info({'status': status})
+            logger.info(msg)
 
             status = alert_service(msg)
             logger.info({'status': status})
@@ -119,7 +119,7 @@ class Mail(APIView):
                 alert_time,
                 alert_interval
             )
-            logger.info({'status': status})
+            logger.info(msg)
 
             # status = alert_service(msg)
             # logger.info({'status': status})
