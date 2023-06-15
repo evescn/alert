@@ -2,6 +2,9 @@ from .config import webhook
 import requests
 import json
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # rest_ful 接口风格
 from rest_framework.views import APIView
@@ -22,6 +25,7 @@ def alert_service(msg):
     response = requests.post(webhook, data=json.dumps(payload))
 
     return response.status_code
+
 
 def extract_data(title, content):
     alert_type = title.split('[')[1].split(']')[0].strip()
@@ -45,7 +49,9 @@ def format_alert_message(alert_type, alert_project, monitor_item, alert_content,
         > <font color="warning">告警时间</font>：%s
         > <font color="warning">告警间隔时间</font>：%s
     ''' % (alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval)
+
     return msg
+
 
 # Create your views here.
 class Alert(APIView):
@@ -73,6 +79,7 @@ class Alert(APIView):
                 alert_time,
                 alert_interval
             )
+            logger.info({'status': status})
 
             status = alert_service(msg)
             logger.info({'status': status})
@@ -92,25 +99,27 @@ class Mail(APIView):
             # 提取数据
             tmp_data = request.data['value']
             print(tmp_data)
-            # title = request.data['value']
-            # content = request.data['content']
-            #
-            # # 抽离数据
-            # alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval = extract_data(
-            #     title,
-            #     content
-            # )
-            #
-            # # 组装数据
-            # msg = format_alert_message(
-            #     alert_type,
-            #     alert_project,
-            #     monitor_item,
-            #     alert_content,
-            #     alert_time,
-            #     alert_interval
-            # )
-            #
+            # [CAT Transaction告警] [项目: cat] [监控项: URL-All-count],[CAT Transaction告警: cat URL All] : [实际值:84 ] [最大阈值: 1 ][告警时间:2023-06-15 10:13:21]<br/>[时间: 2023-06-15 10:13]
+            title = tmp_data.split('[')[1].split(',')[0].strip()
+            content = tmp_data.split(',')[1].strip()
+
+            # 抽离数据
+            alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval = extract_data(
+                title,
+                content
+            )
+
+            # 组装数据
+            msg = format_alert_message(
+                alert_type,
+                alert_project,
+                monitor_item,
+                alert_content,
+                alert_time,
+                alert_interval
+            )
+            logger.info({'status': status})
+
             # status = alert_service(msg)
             # logger.info({'status': status})
             # return Response({'status': status})
@@ -118,3 +127,33 @@ class Mail(APIView):
             logger.error("发生了异常: %s", str(e))
             logger.info({'status': '500'})
             return Response({'status': '500'})
+
+# def send_email(sender, recipient, subject, body):
+#     smtp_server = 'smtp.example.com'  # 邮件服务器地址
+#     smtp_port = 587  # 邮件服务器端口
+#     smtp_username = 'your_username'  # 邮件服务器用户名
+#     smtp_password = 'your_password'  # 邮件服务器密码
+#
+#     # 创建一个带附件的邮件实例
+#     msg = MIMEMultipart()
+#     msg['From'] = sender
+#     msg['To'] = recipient
+#     msg['Subject'] = subject
+#
+#     # 添加邮件正文
+#     msg.attach(MIMEText(body, 'plain'))
+#
+#     # 连接到邮件服务器并发送邮件
+#     with smtplib.SMTP(smtp_server, smtp_port) as server:
+#         server.starttls()
+#         server.login(smtp_username, smtp_password)
+#         server.send_message(msg)
+#
+#
+# # 发送邮件示例
+# sender = 'sender@example.com'
+# recipient = 'recipient@example.com'
+# subject = 'Hello, World!'
+# body = 'This is the body of the email.'
+#
+# send_email(sender, recipient, subject, body)
