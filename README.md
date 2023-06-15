@@ -32,7 +32,7 @@ test_webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx"
 test_url_address = "10.0.0.111:8080"
 
 # 邮件配置
-## 部署需要确定当前云师傅支持 smtp_port 端口，比如：阿里云不支持25端口，163邮件服务使用25端口
+## 部署需要确定当前云是否支持 smtp_port 端口，比如：阿里云不支持25端口，163邮件服务使用25端口
 smtp_server = "smtp.qq.com"  # 邮件服务器地址
 smtp_port = 587  # 邮件服务器端口
 smtp_username = "xxxxx@qq.com"  # 邮件服务器用户名
