@@ -29,7 +29,7 @@ def extract_data(title, content, type=''):
         match = re.search(pattern, content)
         if match:
             http_address = match.group(1)
-            if debug.lower() == 'true' or config.DEBUG:
+            if debug and debug.lower() == 'true' or config.DEBUG:
                 alert_url = http_address.replace("cat-web-server", config.test_url_address)
             else:
                 alert_url = http_address.replace("cat-web-server", config.prod_url_address)
@@ -74,7 +74,7 @@ def alert_service(msg):
         }
     }
     # 请求企业微信机器人接口
-    if debug.lower() == 'true' or config.DEBUG:
+    if debug and debug.lower() == 'true' or config.DEBUG:
         response = requests.post(config.test_webhook, data=json.dumps(payload))
     else:
         response = requests.post(config.prod_webhook, data=json.dumps(payload))
