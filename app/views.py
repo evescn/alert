@@ -21,7 +21,7 @@ class Alert(APIView):
             content = request.data['content']
 
             # 抽离数据
-            alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval, _ = extract_data(
+            alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval, _ = utils.extract_data(
                 title,
                 content
             )
