@@ -100,9 +100,10 @@ class Mail(APIView):
             tmp_data = request.data['value']
             print(tmp_data)
             # [CAT Transaction告警] [项目: cat] [监控项: URL-All-count],[CAT Transaction告警: cat URL All] : [实际值:84 ] [最大阈值: 1 ][告警时间:2023-06-15 10:13:21]<br/>[时间: 2023-06-15 10:13]
-            title = tmp_data.split('[')[1].split(',')[0].strip()
+            title = tmp_data.split(',')[0].strip()
+            print(title)
             content = tmp_data.split(',')[1].strip()
-
+            print(content)
             # 抽离数据
             alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval = extract_data(
                 title,
