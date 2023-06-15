@@ -52,7 +52,7 @@ class Mail(APIView):
         logger.info(request.data)
         try:
             # 提取数据
-            tmp_data = request.data['value'][0]
+            tmp_data = request.data['value']
             title = tmp_data.split(',')[0].strip()
             content = tmp_data.split(',')[1].strip()
 
@@ -75,8 +75,8 @@ class Mail(APIView):
             )
             # logger.info(msg)
 
-            sender = request.data['re'][0]
-            recipient = request.data['to'][0]
+            sender = request.data['re']
+            recipient = request.data['to']
             subject = 'Cat监控告警信息'
             body = str(msg)
 
