@@ -94,6 +94,7 @@ def send_email(sender, recipient, subject, body):
 
     # 添加邮件正文（HTML 格式）
     msg.attach(MIMEText(html_body, 'html'))
+    logger.info(msg)
     logger.info(html_body)
 
     # 连接到邮件服务器并发送邮件
@@ -101,5 +102,5 @@ def send_email(sender, recipient, subject, body):
         server.starttls()
         server.login(config.smtp_username, config.smtp_password)
         server.send_message(msg)
-
+    logger.info("邮件发送完成")
     return 200
