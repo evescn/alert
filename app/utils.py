@@ -102,5 +102,5 @@ def send_email(sender, recipient, subject, body):
         server.starttls()
         server.login(config.smtp_username, config.smtp_password)
         server.send_message(msg)
-    logger.info("邮件发送完成")
+        logger.info("邮件发送完成")
     return 200
