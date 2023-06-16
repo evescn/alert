@@ -194,7 +194,7 @@ services:
       - JAVA_HOME=/usr/lib/jvm/java
       - CATALINA_HOME=/data/app/tomcat
       - TOMCAT_MAJOR_VERSION=8
-      - OMCAT_MINOR_VERSION=8.5.73
+      - TOMCAT_MINOR_VERSION=8.5.73
     volumes:
       - /etc/localtime:/etc/localtime
       - /data/cat-server/cat/:/data/appdatas/cat/
