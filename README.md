@@ -26,7 +26,7 @@ DEBUG = False
 # 企业微信机器人配置
 ## 生产地址
 prod_webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx"
-prod_url_address = "cat.dayuan1997.com"
+prod_url_address = "cat.evescn.com"
 ## 测试地址
 test_webhook = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx"
 test_url_address = "10.0.0.111:8080"
@@ -159,3 +159,48 @@ http://ip:8000/api/alert
 http://ip:8000/api/mail
 ```
 
+# cat 服务部署
+
+> 详细的部署，请查看 [官方文档](https://github.com/dianping/cat/wiki/readme_server)
+
+## 初始化Mysql数据库
+
+一套CAT集群需要部署一个数据库，数据库脚本 `script/CatApplication.sql`
+
+## docker-compose
+
+```yaml
+version: '3.1'
+
+services:
+  cat-server:
+    image: harbor.xxxxx.com/monitoring/cat:v1.0.0
+    container_name: cat-server
+    privileged: true
+    user: root
+    restart: always
+    ports:
+      - 2280:2280
+      - 8080:8080
+    environment:
+      - MYSQL_URL=10.0.0.111
+      - MYSQL_PORT=3306
+      - MYSQL_USERNAME=xxxxx
+      - MYSQL_PASSWD=xxxxxxxxx
+      - MYSQL_SCHEMA=cat
+      - SERVER_IP=10.0.0.111
+      - PATH=/data/app/tomcat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - JAVA_VERSION=1.8.0
+      - JAVA_HOME=/usr/lib/jvm/java
+      - CATALINA_HOME=/data/app/tomcat
+      - TOMCAT_MAJOR_VERSION=8
+      - OMCAT_MINOR_VERSION=8.5.73
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /data/cat-server/cat/:/data/appdatas/cat/
+      - /data/cat-server/applogs/:/data/applogs/
+    command: ["/bin/sh", "-c", "chmod +x /datasources.sh && /datasources.sh && catalina.sh run"]
+
+```
+
+> 详细的 Dockerfile 镜像打包文档没有，后续需要在研究
