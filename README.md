@@ -9,8 +9,8 @@ $ git clone https://github.com/evescn/alert.git
 $ cd alert
 
 # 打包 Docker 镜像
-$ docker build -t harbor.xxx.cn/devops/alert:v1.0 -f Dockerfile .
-$ docker push harbor.xxx.cn/devops/alert:v1.0
+$ docker build -t harbor.xxx.com/devops/alert:v1.0 -f Dockerfile .
+$ docker push harbor.xxx.com/devops/alert:v1.0
 ```
 
 ## 2. 服务部署
@@ -54,7 +54,7 @@ $ docker run -d \
   -p 8000:8000 \
   -v /data/alert/config/config.py:/alert/app/config.py \
   -v /data/alert/log:/alert/log \
-  harbor.xxx.cn/devops/alert:v1.0
+  harbor.xxx.com/devops/alert:v1.0
 ```
 
 ### c | docker-compose 启动
@@ -64,7 +64,7 @@ version: '3.1'
 
 services:
   alert:
-    image: harbor.xxx.cn/devops/alert:v1.0
+    image: harbor.xxx.com/devops/alert:v1.0
     container_name: alert
     hostname: alert
     privileged: true
@@ -102,7 +102,7 @@ spec:
     spec:
       containers:
       - name: alert
-        image: harbor.xxx.cn/devops/alert:v1.0
+        image: harbor.xxx.com/devops/alert:v1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
