@@ -14,28 +14,41 @@ logger = logging.getLogger('app')
 # 获取环境变量
 debug = os.getenv('DEBUG')
 
+
 def extract_data(title, content, type=''):
-    alert_type = title.split('[')[1].split(']')[0].strip()
-    alert_project = title.split('[')[2].split(']')[0].split(':')[1].strip()
-    monitor_item = title.split('[')[3].split(']')[0].split(':')[1].strip()
-    alert_content = content.split('[')[3].split(']')[0].strip() + ', ' + \
-                    (': '.join(content.split('[')[2].split(']')[0].split(':')[:])).strip()
-    alert_time = (':'.join(content.split('[')[4].split(']')[0].split(':')[1:])).strip()
-    alert_interval = content.split('[')[6].split(']')[1]
-    alert_url = ''
+    if "告警恢复" in title:
+        # 告警恢复数据获取
+        # [告警恢复] [告警类型 Transacation告警][cat URL-All-count],[告警已恢复][恢复时间]2023-06-15 18:20
+        alert_type = title.split('[')[2].split(']')[0].split(' ')[1].strip()
+        alert_project = title.split('[')[3].split(']')[0].split(' ')[0].strip()
+        monitor_item = title.split('[')[3].split(']')[0].split(' ')[1].strip()
+        alert_content = content.split('[')[1].split(']')[0].strip()
+        alert_time = content.split(']')[2].strip()
+        alert_interval = ''
+        alert_url = ''
+    else:
+        # 告警数据获取
+        alert_type = title.split('[')[1].split(']')[0].strip()
+        alert_project = title.split('[')[2].split(']')[0].split(':')[1].strip()
+        monitor_item = title.split('[')[3].split(']')[0].split(':')[1].strip()
+        alert_content = content.split('[')[3].split(']')[0].strip() + ', ' + \
+                        (': '.join(content.split('[')[2].split(']')[0].split(':')[:])).strip()
+        alert_time = (':'.join(content.split('[')[4].split(']')[0].split(':')[1:])).strip()
+        alert_interval = content.split('[')[6].split(']')[1]
+        alert_url = ''
 
-    if type == 'Mail':
-        pattern = r"<a href='(.*?)'>"
-        match = re.search(pattern, content)
-        if match:
-            http_address = match.group(1)
-            if debug and debug.lower() == 'true' or config.DEBUG:
-                alert_url = http_address.replace("cat-web-server", config.test_url_address)
+        if type == 'Mail':
+            pattern = r"<a href='(.*?)'>"
+            match = re.search(pattern, content)
+            if match:
+                http_address = match.group(1)
+                if debug and debug.lower() == 'true' or config.DEBUG:
+                    alert_url = http_address.replace("cat-web-server", config.test_url_address)
+                else:
+                    alert_url = http_address.replace("cat-web-server", config.prod_url_address)
+
             else:
-                alert_url = http_address.replace("cat-web-server", config.prod_url_address)
-
-        else:
-            logger.error("HTTP 地址未找到")
+                logger.error("HTTP 地址未找到")
 
     return alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval, alert_url
 
@@ -43,15 +56,23 @@ def extract_data(title, content, type=''):
 def format_alert_message(alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval,
                          alert_url=''):
     if not alert_url:
-        msg = '''
-            # Cat监控告警信息
-            > <font color="warning">告警类型</font>：%s
-            > <font color="warning">告警项目</font>：%s
-            > <font color="warning">监控项目</font>：%s
-            > <font color="warning">告警内容</font>：%s
-            > <font color="warning">告警时间</font>：%s
-            > <font color="warning">告警间隔时间</font>：%s
-        ''' % (alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval)
+        if "告警已恢复" in alert_content:
+            msg = '''
+# Cat监控告警恢复信息
+> <font color="info">告警类型</font>：%s
+> <font color="info">告警项目</font>：%s
+> <font color="info">监控项目</font>：%s
+> <font color="info">告警内容</font>：%s
+> <font color="info">恢复时间</font>：%s''' % (alert_type, alert_project, monitor_item, alert_content, alert_time)
+        else:
+            msg = '''
+# Cat监控告警信息
+> <font color="warning">告警类型</font>：%s
+> <font color="warning">告警项目</font>：%s
+> <font color="warning">监控项目</font>：%s
+> <font color="warning">告警内容</font>：%s
+> <font color="warning">告警时间</font>：%s
+> <font color="warning">告警间隔时间</font>：%s''' % (alert_type, alert_project, monitor_item, alert_content, alert_time, alert_interval)
     else:
         msg = '''
 # Cat监控告警信息
@@ -61,8 +82,7 @@ def format_alert_message(alert_type, alert_project, monitor_item, alert_content,
 > <font color="warning">告警内容</font>：%s
 > <font color="warning">告警时间</font>：%s
 > <font color="warning">告警URL</font>：%s
-> <font color="warning">告警间隔时间</font>：%s
-        ''' % (alert_type, alert_project, monitor_item, alert_content, alert_time, alert_url, alert_interval)
+> <font color="warning">告警间隔时间</font>：%s''' % (alert_type, alert_project, monitor_item, alert_content, alert_time, alert_url, alert_interval)
     return msg
 
 
@@ -96,7 +116,7 @@ def send_email(sender, recipient, subject, body):
 
     # 添加邮件正文（HTML 格式）
     msg.attach(MIMEText(html_body, 'html'))
-    logger.info(msg)
+    # logger.info(msg)
     logger.info(html_body)
 
     # 连接到邮件服务器并发送邮件

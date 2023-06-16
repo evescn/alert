@@ -134,8 +134,11 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': './log/access.log',
+            'when': 'midnight',  # 每天切割日志
+            'interval': 1,  # 切割时间间隔为1天
+            'backupCount': 7,  # 保留7天日志
             'formatter': 'custom',
         },
     },
@@ -152,4 +155,5 @@ LOGGING = {
         },
     },
 }
+
 

@@ -38,11 +38,11 @@ class Alert(APIView):
             logger.info(msg)
 
             status = utils.alert_service(msg)
-            logger.info({'status': status})
+            logger.info("告警发送完成")
             return Response({'status': status})
         except Exception as e:
             logger.error("发生了异常: %s", str(e))
-            logger.info({'status': '500'})
+            logger.info("告警发送异常")
             return Response({'status': '500'})
 
 
@@ -84,5 +84,5 @@ class Mail(APIView):
             return Response({'status': status})
         except Exception as e:
             logger.error("发生了异常: %s", str(e))
-            logger.info({'status': '500'})
+            logger.info("邮件发送异常")
             return Response({'status': '500'})
