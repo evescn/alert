@@ -16,9 +16,12 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 from app import views
+from django.conf.urls import handler404
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api/alert', views.Alert.as_view(), name='alert'),
     path('api/mail', views.Mail.as_view(), name='mail'),
 ]
+
+handler404 = 'app.views.handler404'

@@ -86,3 +86,6 @@ class Mail(APIView):
             logger.error("发生了异常: %s", str(e))
             logger.info("邮件发送异常")
             return Response({'status': '500'})
+
+def handler404(request, exception):
+    return JsonResponse({'error': 'API endpoint not found.'}, status=404)
